@@ -25,12 +25,17 @@ function addExpense() {
 }
 
 function updateBudget() {
-    const budget = document.getElementById('budget-total').value;
-    if(!isNaN(budget)) {
-        localStorage.setItem("budget", budget);
+    const newBudget = document.getElementById('budget-total').value;
+    if(!isNaN(newBudget)) {
+        localStorage.setItem("budget", newBudget);
+        budget = JSON.parse(localStorage.getItem('budget')) || [];
         document.getElementById('budget-total').value = '';
+        updateChart();
+    } else {
+        alert('Please enter a number.');
     }
 }
+
 
 function deleteExpense(index) {
     expenses.splice(index, 1);
@@ -80,4 +85,61 @@ function updateChart() {
             }
         }
     });
+    updateChartTwo();
+}
+
+function updateChartTwo() {
+    const ctx2 = document.getElementById('budget-chart').getContext('2d');
+    const label = expenses.map(expense => expense.tag);
+    const amounts2 = expenses.map(expense => expense.amount);
+    var datas = [];
+    var total = 0;
+
+    console.log(label.length);
+
+    const colors = expenses.map(() => `hsl(${Math.floor(Math.random() * 360)}, 100%, 70%)`);
+
+    if (window.myOtherChart) {
+        window.myOtherChart.destroy();
+    }
+
+    for(var i = 0; i < label.length; i++) {
+        var current = [];
+        current.push(amounts2[i]);
+        total += current[0];
+        console.log(i + " " + current);
+        datas[i] = {
+            label: label[i],
+            data: current,
+            backgroundColor: colors[i],
+            borderWidth: 1
+        }
+    }
+
+    if(budget){
+        window.myOtherChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: " ",
+                datasets: datas
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: true
+                    },
+                    x: {
+                        stacked: true,
+                        max: budget   
+                    }
+                }
+            }
+        });
+    }
+    
+    let remaining = budget - total;
+    document.getElementById('total-remaining').innerHTML = "You have: $" + remaining + " remaining before you go over budget";
 }
