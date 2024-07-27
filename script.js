@@ -95,8 +95,6 @@ function updateChartTwo() {
     var datas = [];
     var total = 0;
 
-    console.log(label.length);
-
     const colors = expenses.map(() => `hsl(${Math.floor(Math.random() * 360)}, 100%, 70%)`);
 
     if (window.myOtherChart) {
@@ -107,7 +105,6 @@ function updateChartTwo() {
         var current = [];
         current.push(amounts2[i]);
         total += current[0];
-        console.log(i + " " + current);
         datas[i] = {
             label: label[i],
             data: current,
