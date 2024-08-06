@@ -16,6 +16,18 @@ const AnnualSpendingChart = ({ expenses }) => {
     const monthlyAmounts = expenses.map(expense => expense.amount);
     const yearlyAmounts = monthlyAmounts.map(amount => amount * 12);
 
+    // condense tags
+    for(var i = 0; i < tags.length - 1; i++){
+      for(var j = i + 1; j < tags.length; j++) {
+        if(tags[i] == tags[j]){
+          yearlyAmounts[i] += yearlyAmounts[j];
+
+          tags.splice(j, 1);
+          yearlyAmounts.splice(j, 1);
+        }
+      }
+    }
+
     const colors = ['#C62828', '#1565C0', '#2E7D32'];
 
     chartRef.current = new Chart(ctx, {

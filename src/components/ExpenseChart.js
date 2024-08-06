@@ -12,8 +12,20 @@ const ExpenseChart = ({ expenses }) => {
       chartRef.current.destroy();
     }
 
-    const tags = expenses.map(expense => expense.tag);
-    const amounts = expenses.map(expense => expense.amount);
+    let tags = expenses.map(expense => expense.tag);
+    let amounts = expenses.map(expense => expense.amount);
+
+    // condense tags
+    for(var i = 0; i < tags.length - 1; i++){
+      for(var j = i + 1; j < tags.length; j++) {
+        if(tags[i] == tags[j]){
+          amounts[i] += amounts[j];
+
+          tags.splice(j, 1);
+          amounts.splice(j, 1);
+        }
+      }
+    }
 
     const colors = ['#C62828', '#1565C0', '#2E7D32'];
 

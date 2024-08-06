@@ -12,8 +12,20 @@ const BudgetChart = ({ expenses, monthlyBudget }) => {
       chartRef.current.destroy();
     }
 
-    const labels = expenses.map(expense => expense.tag);
-    const amounts = expenses.map(expense => expense.amount);
+    let labels = expenses.map(expense => expense.tag);
+    let amounts = expenses.map(expense => expense.amount);
+
+    // condense labels
+    for(var i = 0; i < labels.length - 1; i++){
+      for(var j = i + 1; j < labels.length; j++) {
+        if(labels[i] == labels[j]){
+          amounts[i] += amounts[j];
+
+          labels.splice(j, 1);
+          amounts.splice(j, 1);
+        }
+      }
+    }
 
     const colors = ['#C62828', '#1565C0', '#2E7D32'];
 
